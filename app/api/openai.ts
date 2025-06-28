@@ -58,6 +58,19 @@ export async function handle(
     });
   }
 
+  // 记录用户输入内容到日志
+  if (req.method === "POST" && subpath === OpenaiPath.ChatPath) {
+    const body = await req.text();
+    console.log("[User Chat Input]", body);
+    // 由于 requestOpenai 还需要 body，这里需要重新构造请求
+    req = new NextRequest(req.url, {
+      method: req.method,
+      headers: req.headers,
+      body,
+      duplex: "half",
+    });
+  }
+
   try {
     const response = await requestOpenai(req);
 
