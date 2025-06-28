@@ -12,6 +12,10 @@ import {
 import { prettyObject } from "./format";
 import { fetch as tauriFetch } from "./stream";
 
+function logMessage(message: string) {
+  console.log(`[Chat Log] ${new Date().toISOString()} - ${message}`);
+}
+
 export function compressImage(file: Blob, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -366,6 +370,9 @@ export function stream(
         if (!text || text.trim().length === 0) {
           return;
         }
+
+        logMessage(`Received message: ${text}`);
+
         try {
           const chunk = parseSSE(text, runTools);
           if (chunk) {
@@ -592,6 +599,9 @@ export function streamWithThink(
         if (!text || text.trim().length === 0) {
           return;
         }
+
+        logMessage(`Received message: ${text}`);
+
         try {
           const chunk = parseSSE(text, runTools);
           // Skip if content is empty
